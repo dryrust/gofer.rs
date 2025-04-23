@@ -1,0 +1,26 @@
+[package]
+name = "gofer"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+description.workspace = true
+#documentation.workspace = true
+readme.workspace = true
+homepage.workspace = true
+repository.workspace = true
+license.workspace = true
+keywords.workspace = true
+categories.workspace = true
+publish.workspace = true
+
+[features]
+default = ["all", "std"]
+std = ["dogma/std"]
+all = []
+unstable = []
+
+[dev-dependencies]
+
+[dependencies]
+dogma = { version = "0.1", default-features = false }

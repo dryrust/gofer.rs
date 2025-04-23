@@ -1,0 +1,27 @@
+# See: https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[workspace]
+members = ["lib/*"]
+default-members = ["lib/*"]
+resolver = "2"
+
+[workspace.package]
+version = "0.0.0"
+authors = ["Arto Bendiken"]
+edition = "2021"
+rust-version = "1.81"
+description = "Gofer.rs"
+#documentation = "https://docs.rs/gofer/"
+readme = true
+homepage = "https://github.com/dryrust/gofer.rs"
+repository = "https://github.com/dryrust/gofer.rs"
+license = "Unlicense"
+keywords = ["network-programming"]
+categories = ["command-line-interface"]
+publish = true
+
+[workspace.dependencies]
+gofer = { path = "lib/gofer" }
+
+[patch.crates-io]
+gofer = { path = "lib/gofer" }
