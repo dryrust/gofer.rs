@@ -16,7 +16,7 @@ publish.workspace = true
 
 [features]
 default = ["all", "std"]
-std = ["data-url?/std", "dogma/std", "url/std"]
+std = ["data-url?/std", "dogma/std", "thiserror/std", "url/std"]
 all = ["data", "file", "http", "https"]
 data = ["dep:data-url"]
 file = ["std"]
@@ -32,4 +32,5 @@ data-url = { version = "0.3", default-features = false, features = [
 ], optional = true }
 dogma = { version = "0.1", default-features = false }
 reqwest = { version = "0.12", default-features = false, optional = true }
+thiserror = { version = "2", default-features = false }
 url = { version = "2.5", default-features = false }

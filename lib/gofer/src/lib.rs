@@ -12,6 +12,12 @@
 mod features;
 pub use features::*;
 
+mod error;
+pub use error::*;
+
+mod open;
+pub use open::*;
+
 #[doc = include_str!("../../../README.md")]
 #[cfg(doctest)]
 pub struct ReadmeDoctests;
