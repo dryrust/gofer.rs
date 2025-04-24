@@ -10,7 +10,7 @@
 #![allow(unused)]
 
 #[cfg(feature = "std")]
-pub use std::io::Read;
+pub use std::io::{Cursor, Read};
 
 #[cfg(not(feature = "std"))]
 todo!("the 'std' feature is currently required"); // TODO

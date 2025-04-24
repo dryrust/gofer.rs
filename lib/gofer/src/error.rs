@@ -11,4 +11,12 @@ pub enum Error {
 
     #[error("unknown URL scheme: {0}")]
     UnknownScheme(String),
+
+    #[cfg(feature = "data")]
+    #[error("invalid `data:` URL: {0}")]
+    InvalidDataUrl(#[from] data_url::DataUrlError),
+
+    #[cfg(feature = "data")]
+    #[error("invalid `data:` URL body: {0}")]
+    InvalidDataUrlBody(#[from] data_url::forgiving_base64::InvalidBase64),
 }
