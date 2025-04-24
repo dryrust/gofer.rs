@@ -5,10 +5,12 @@
 [![Package](https://img.shields.io/crates/v/gofer)](https://crates.io/crates/gofer)
 [![Documentation](https://docs.rs/gofer/badge.svg)](https://docs.rs/gofer/)
 
-🚧 _We are building in public. This is presently under heavy construction._
+**Gofer.rs** makes it easy to fetch and read files from URLs in Rust.
+Just call `gofer::open(url)?` to get back a `Read`!
 
 ## ✨ Features
 
+- Currently supports `https:`, `http:`, `file:`, and `data:` URLs.
 - Supports opting out of any feature using comprehensive feature flags.
 - Adheres to the Rust API Guidelines in its [naming conventions].
 - 100% free and unencumbered public domain software.
@@ -36,7 +38,7 @@ gofer = "0.1"
 
 ```toml
 [dependencies]
-gofer = { version = "0.1", default-features = false, features = [] }
+gofer = { version = "0.1", default-features = false, features = ["https"] }
 ```
 
 ## 👉 Examples
@@ -44,7 +46,25 @@ gofer = { version = "0.1", default-features = false, features = [] }
 ### Importing the library
 
 ```rust
-use gofer::*;
+use gofer::open;
+```
+
+### Reading HTTP(S) URLs
+
+```rust
+gofer::open("https://www.google.com/robots.txt")?
+```
+
+### Reading `file:` URLs
+
+```rust
+gofer::open("file://path/to/file.txt")?
+```
+
+### Reading `data:` URLs
+
+```rust
+gofer::open("data:,A%20brief%20note")?
 ```
 
 ## 📚 Reference
