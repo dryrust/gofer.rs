@@ -58,13 +58,13 @@ let result = gofer::open("https://www.google.com/robots.txt");
 ### Reading `file:` URLs
 
 ```rust
-let result = gofer::open("file://path/to/file.txt");
+let result = gofer::open("file:///path/to/file.txt");
 ```
 
 ### Reading `data:` URLs
 
 ```rust
-let result = gofer::open("data:,A%20brief%20note");
+let result = gofer::open("data:,Hello%2C%20world%21%0A");
 ```
 
 ## 📚 Reference
