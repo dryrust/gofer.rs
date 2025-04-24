@@ -17,7 +17,7 @@ publish.workspace = true
 [features]
 default = ["all", "std"]
 std = ["data-url?/std", "dogma/std", "thiserror/std", "url/std"]
-all = ["data", "file", "http", "https"]
+all = ["data", "file", "http", "https", "stdin"]
 data = ["dep:data-url"]
 file = ["std"]
 ftp = ["dep:suppaftp"]
@@ -27,7 +27,7 @@ http = ["dep:reqwest", "reqwest?/blocking"]
 https = ["http", "reqwest?/default", "reqwest?/rustls-tls-native-roots"]
 scp = ["dep:ssh2"]
 stdin = ["std"]
-unstable = ["ftp", "ftps", "git", "scp", "stdin"]
+unstable = ["ftp", "ftps", "git", "scp"]
 
 [dev-dependencies]
 

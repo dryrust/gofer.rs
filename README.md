@@ -61,6 +61,12 @@ let result = gofer::open("https://www.google.com/robots.txt");
 let result = gofer::open("file:///path/to/file.txt");
 ```
 
+### Reading `stdin:` URLs
+
+```rust
+let result = gofer::open("stdin:");
+```
+
 ### Reading `data:` URLs
 
 ```rust
@@ -70,6 +76,16 @@ let result = gofer::open("data:,Hello%2C%20world%21%0A");
 ## 📚 Reference
 
 https://docs.rs/gofer/
+
+### Protocols
+
+Scheme   | Feature  | Summary
+:------- | :------- | :---------------------------------------------------------
+`data:`  | `data`   | Inline data in Base64 or URL-encoded format
+`file:`  | `file`   | Local file path
+`http:`  | `http`   | HTTP
+`https:` | `https`  | HTTPS
+`stdin:` | `stdin`  | Standard input stream
 
 ## 👨‍💻 Development
 
