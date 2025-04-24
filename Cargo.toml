@@ -17,7 +17,7 @@ homepage = "https://github.com/dryrust/gofer.rs"
 repository = "https://github.com/dryrust/gofer.rs"
 license = "Unlicense"
 keywords = ["network-programming"]
-categories = ["command-line-interface"]
+categories = ["rust-patterns", "command-line-interface"]
 publish = true
 
 [workspace.dependencies]

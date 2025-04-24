@@ -14,11 +14,26 @@ pub fn open(url: impl AsRef<str>) -> Result<Box<dyn Read>> {
         #[cfg(feature = "file")]
         "file" => crate::schemes::file::open(&url),
 
+        #[cfg(feature = "ftp")]
+        "ftp" => crate::schemes::ftp::open(&url, false),
+
+        #[cfg(feature = "ftps")]
+        "ftps" => crate::schemes::ftp::open(&url, true),
+
+        #[cfg(feature = "git")]
+        "git" => crate::schemes::git::open(&url),
+
         #[cfg(feature = "http")]
         "http" => crate::schemes::http::open(&url, false),
 
         #[cfg(feature = "https")]
         "https" => crate::schemes::http::open(&url, true),
+
+        #[cfg(feature = "scp")]
+        "scp" => crate::schemes::scp::open(&url),
+
+        #[cfg(feature = "stdin")]
+        "stdin" => crate::schemes::stdin::open(&url),
 
         scheme => Err(Error::UnknownScheme(scheme.to_string())),
     }
