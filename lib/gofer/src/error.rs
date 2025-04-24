@@ -32,3 +32,76 @@ pub enum Error {
     #[error("failed HTTP(S) request: {0}")]
     FailedHttpRequest(#[from] reqwest::Error),
 }
+
+#[cfg(feature = "std")]
+impl Into<std::io::Error> for Error {
+    fn into(self) -> std::io::Error {
+        use std::io::ErrorKind;
+        match self {
+            Error::InvalidUrl(e) => std::io::Error::new(ErrorKind::InvalidInput, e),
+            Error::UnknownScheme(s) => std::io::Error::new(ErrorKind::InvalidInput, s),
+
+            #[cfg(feature = "data")]
+            Error::InvalidDataUrl(e) => std::io::Error::new(ErrorKind::InvalidInput, e),
+
+            #[cfg(feature = "data")]
+            Error::InvalidDataUrlBody(e) => std::io::Error::new(ErrorKind::InvalidData, e),
+
+            #[cfg(feature = "file")]
+            Error::InvalidFileUrl(u) => std::io::Error::new(ErrorKind::InvalidInput, u.as_str()),
+
+            #[cfg(feature = "file")]
+            Error::FailedFileIo(e) => e,
+
+            #[cfg(any(feature = "http", feature = "https"))]
+            Error::FailedHttpRequest(e) => std::io::Error::from(ErrorKind::Other), // FIXME
+        }
+    }
+}
+
+impl TryInto<url::ParseError> for Error {
+    type Error = Error;
+
+    fn try_into(self) -> Result<url::ParseError> {
+        match self {
+            Error::InvalidUrl(e) => Ok(e),
+            _ => Err(self),
+        }
+    }
+}
+
+#[cfg(feature = "data")]
+impl TryInto<data_url::DataUrlError> for Error {
+    type Error = Error;
+
+    fn try_into(self) -> Result<data_url::DataUrlError> {
+        match self {
+            Error::InvalidDataUrl(e) => Ok(e),
+            _ => Err(self),
+        }
+    }
+}
+
+#[cfg(feature = "data")]
+impl TryInto<data_url::forgiving_base64::InvalidBase64> for Error {
+    type Error = Error;
+
+    fn try_into(self) -> Result<data_url::forgiving_base64::InvalidBase64> {
+        match self {
+            Error::InvalidDataUrlBody(e) => Ok(e),
+            _ => Err(self),
+        }
+    }
+}
+
+#[cfg(any(feature = "http", feature = "https"))]
+impl TryInto<reqwest::Error> for Error {
+    type Error = Error;
+
+    fn try_into(self) -> Result<reqwest::Error> {
+        match self {
+            Error::FailedHttpRequest(e) => Ok(e),
+            _ => Err(self),
+        }
+    }
+}
