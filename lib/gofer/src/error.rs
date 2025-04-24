@@ -19,4 +19,8 @@ pub enum Error {
     #[cfg(feature = "data")]
     #[error("invalid `data:` URL body: {0}")]
     InvalidDataUrlBody(#[from] data_url::forgiving_base64::InvalidBase64),
+
+    #[cfg(any(feature = "http", feature = "https"))]
+    #[error("failed HTTP(S) request: {0}")]
+    FailedHttpRequest(#[from] reqwest::Error),
 }

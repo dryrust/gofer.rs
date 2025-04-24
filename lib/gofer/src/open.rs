@@ -13,10 +13,10 @@ pub fn open(url: impl AsRef<str>) -> Result<Box<dyn Read>> {
         "file" => crate::schemes::file::open(&url),
 
         #[cfg(feature = "http")]
-        "http" => crate::schemes::http::open(&url),
+        "http" => crate::schemes::http::open(&url, false),
 
         #[cfg(feature = "https")]
-        "https" => crate::schemes::http::open(&url),
+        "https" => crate::schemes::http::open(&url, true),
 
         scheme => Err(Error::UnknownScheme(scheme.to_string())), // TODO: registry
     }
