@@ -6,12 +6,12 @@
 [![Documentation](https://docs.rs/gofer/badge.svg)](https://docs.rs/gofer/)
 
 **Gofer.rs** makes it easy to fetch and read files from URLs in Rust.
-Just call `gofer::open(url)?` to get back a `Read`!
+Just call `gofer::open(url)` to get back a `Read`!
 
 ## ✨ Features
 
 - Currently supports `https:`, `http:`, `file:`, and `data:` URLs.
-- Supports opting out of any feature using comprehensive feature flags.
+- Supports opting out of any feature using comprehensive [feature flags].
 - Adheres to the Rust API Guidelines in its [naming conventions].
 - 100% free and unencumbered public domain software.
 
@@ -38,7 +38,7 @@ gofer = "0.1"
 
 ```toml
 [dependencies]
-gofer = { version = "0.1", default-features = false, features = ["https"] }
+gofer = { version = "0.1", default-features = false, features = ["file"] }
 ```
 
 ## 👉 Examples
@@ -52,19 +52,19 @@ use gofer::open;
 ### Reading HTTP(S) URLs
 
 ```rust
-gofer::open("https://www.google.com/robots.txt")?
+let result = gofer::open("https://www.google.com/robots.txt");
 ```
 
 ### Reading `file:` URLs
 
 ```rust
-gofer::open("file://path/to/file.txt")?
+let result = gofer::open("file://path/to/file.txt");
 ```
 
 ### Reading `data:` URLs
 
 ```rust
-gofer::open("data:,A%20brief%20note")?
+let result = gofer::open("data:,A%20brief%20note");
 ```
 
 ## 📚 Reference
@@ -85,4 +85,5 @@ git clone https://github.com/dryrust/gofer.rs.git
 [![Share on Facebook](https://img.shields.io/badge/share%20on-fb-1976D2?logo=facebook)](https://www.facebook.com/sharer/sharer.php?u=https://github.com/dryrust/gofer.rs)
 [![Share on LinkedIn](https://img.shields.io/badge/share%20on-linkedin-3949AB?logo=linkedin)](https://www.linkedin.com/sharing/share-offsite/?url=https://github.com/dryrust/gofer.rs)
 
+[feature flags]: https://github.com/dryrust/gofer.rs/blob/master/lib/gofer/Cargo.toml
 [naming conventions]: https://rust-lang.github.io/api-guidelines/naming.html
