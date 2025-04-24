@@ -9,6 +9,14 @@
 #![deny(unsafe_code)]
 #![allow(unused)]
 
+#[cfg(feature = "std")]
+pub use std::io::Read;
+
+#[cfg(not(feature = "std"))]
+todo!("the 'std' feature is currently required"); // TODO
+
+pub use url::Url;
+
 mod features;
 pub use features::*;
 
@@ -17,6 +25,8 @@ pub use error::*;
 
 mod open;
 pub use open::*;
+
+mod schemes;
 
 #[doc = include_str!("../../../README.md")]
 #[cfg(doctest)]
