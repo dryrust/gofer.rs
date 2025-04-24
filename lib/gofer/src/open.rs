@@ -5,6 +5,8 @@ use crate::{Error, Read, Result, Url};
 pub fn open(url: impl AsRef<str>) -> Result<Box<dyn Read>> {
     let url = Url::parse(url.as_ref())?;
 
+    // TODO: look up the scheme in a protocol handler registry
+
     match url.scheme() {
         #[cfg(feature = "data")]
         "data" => crate::schemes::data::open(&url),
@@ -18,6 +20,11 @@ pub fn open(url: impl AsRef<str>) -> Result<Box<dyn Read>> {
         #[cfg(feature = "https")]
         "https" => crate::schemes::http::open(&url, true),
 
-        scheme => Err(Error::UnknownScheme(scheme.to_string())), // TODO: registry
+        scheme => Err(Error::UnknownScheme(scheme.to_string())),
     }
+}
+
+#[cfg(feature = "std")]
+pub fn open_buffered(url: impl AsRef<str>) -> Result<std::io::BufReader<Box<dyn Read>>> {
+    Ok(std::io::BufReader::new(open(url)?))
 }
