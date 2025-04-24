@@ -15,5 +15,5 @@ pub fn open(url: &Url) -> Result<Box<dyn Read>> {
     // See: https://doc.rust-lang.org/stable/std/fs/struct.OpenOptions.html#method.open
     let file = File::open(path)?;
 
-    Ok(Box::new(file) as Box<dyn Read>)
+    Ok(Box::new(file))
 }

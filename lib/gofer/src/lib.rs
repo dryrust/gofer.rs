@@ -7,7 +7,7 @@
 //! ```
 
 #![deny(unsafe_code)]
-#![allow(unused)]
+//#![allow(unused)]
 
 #[cfg(feature = "std")]
 pub use std::io::{Cursor, Read};

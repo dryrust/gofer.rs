@@ -1,6 +1,6 @@
 // This is free and unencumbered software released into the public domain.
 
-use crate::{Cursor, Error, Read, Result, Url};
+use crate::{Cursor, Read, Result, Url};
 use data_url::DataUrl;
 
 /// See: https://en.wikipedia.org/wiki/Data_URI_scheme
@@ -13,5 +13,5 @@ pub fn open(url: &Url) -> Result<Box<dyn Read>> {
     // See: https://docs.rs/data-url/latest/data_url/struct.DataUrl.html#method.decode_to_vec
     let (body, _) = url.decode_to_vec()?;
 
-    Ok(Box::new(Cursor::new(body)) as Box<dyn Read>)
+    Ok(Box::new(Cursor::new(body)))
 }

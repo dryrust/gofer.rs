@@ -13,23 +13,31 @@ pub enum Error {
     UnknownScheme(String),
 
     #[cfg(feature = "data")]
-    #[error("invalid `data:` URL: {0}")]
+    #[error("invalid data URL: {0}")]
     InvalidDataUrl(#[from] data_url::DataUrlError),
 
     #[cfg(feature = "data")]
-    #[error("invalid `data:` URL body: {0}")]
+    #[error("invalid data URL body: {0}")]
     InvalidDataUrlBody(#[from] data_url::forgiving_base64::InvalidBase64),
 
     #[cfg(feature = "file")]
-    #[error("invalid `file:` URL: {0}")]
+    #[error("invalid file URL: {0}")]
     InvalidFileUrl(url::Url),
 
     #[cfg(feature = "file")]
     #[error("failed file I/O: {0}")]
     FailedFileIo(#[from] std::io::Error),
 
+    #[cfg(any(feature = "ftp", feature = "ftps"))]
+    #[error("invalid FTP URL: {0}")]
+    InvalidFtpUrl(url::Url),
+
+    #[cfg(any(feature = "ftp", feature = "ftps"))]
+    #[error("failed FTP request: {0}")]
+    FailedFtpRequest(#[from] suppaftp::FtpError),
+
     #[cfg(any(feature = "http", feature = "https"))]
-    #[error("failed HTTP(S) request: {0}")]
+    #[error("failed HTTP request: {0}")]
     FailedHttpRequest(#[from] reqwest::Error),
 }
 
@@ -53,8 +61,14 @@ impl Into<std::io::Error> for Error {
             #[cfg(feature = "file")]
             Error::FailedFileIo(e) => e,
 
+            #[cfg(any(feature = "ftp", feature = "ftps"))]
+            Error::InvalidFtpUrl(u) => std::io::Error::new(ErrorKind::InvalidInput, u.as_str()),
+
+            #[cfg(any(feature = "ftp", feature = "ftps"))]
+            Error::FailedFtpRequest(_e) => std::io::Error::from(ErrorKind::Other), // FIXME
+
             #[cfg(any(feature = "http", feature = "https"))]
-            Error::FailedHttpRequest(e) => std::io::Error::from(ErrorKind::Other), // FIXME
+            Error::FailedHttpRequest(_e) => std::io::Error::from(ErrorKind::Other), // FIXME
         }
     }
 }
@@ -89,6 +103,18 @@ impl TryInto<data_url::forgiving_base64::InvalidBase64> for Error {
     fn try_into(self) -> Result<data_url::forgiving_base64::InvalidBase64> {
         match self {
             Error::InvalidDataUrlBody(e) => Ok(e),
+            _ => Err(self),
+        }
+    }
+}
+
+#[cfg(any(feature = "ftp", feature = "ftps"))]
+impl TryInto<suppaftp::FtpError> for Error {
+    type Error = Error;
+
+    fn try_into(self) -> Result<suppaftp::FtpError> {
+        match self {
+            Error::FailedFtpRequest(e) => Ok(e),
             _ => Err(self),
         }
     }

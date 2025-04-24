@@ -16,18 +16,24 @@ publish.workspace = true
 
 [features]
 default = ["all", "std"]
-std = ["data-url?/std", "dogma/std", "thiserror/std", "url/std"]
-all = ["data", "file", "http", "https", "stdin"]
+std = [
+    "data-url?/std",
+    "dogma/std",
+    "percent-encoding?/std",
+    "thiserror/std",
+    "url/std",
+]
+all = ["data", "file", "ftp", "http", "https", "stdin"]
 data = ["dep:data-url"]
 file = ["std"]
-ftp = ["dep:suppaftp"]
+ftp = ["dep:percent-encoding", "dep:suppaftp"]
 ftps = ["ftp", "suppaftp?/rustls"]
 git = ["dep:gix-protocol"]
 http = ["dep:reqwest", "reqwest?/blocking"]
 https = ["http", "reqwest?/default", "reqwest?/rustls-tls-native-roots"]
 scp = ["dep:ssh2"]
 stdin = ["std"]
-unstable = ["ftp", "ftps", "git", "scp"]
+unstable = ["ftps", "git", "scp"]
 
 [dev-dependencies]
 
@@ -39,6 +45,7 @@ dogma = { version = "0.1", default-features = false }
 gix-protocol = { version = "0.49", default-features = false, features = [
     "blocking-client",
 ], optional = true }
+percent-encoding = { version = "2.3", default-features = false, optional = true }
 reqwest = { version = "0.12", default-features = false, optional = true }
 ssh2 = { version = "0.9", default-features = false, features = [
     "vendored-openssl",

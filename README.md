@@ -10,7 +10,7 @@ Just call `gofer::open(url)` to get back a `Read`!
 
 ## ✨ Features
 
-- Currently supports `https:`, `http:`, `file:`, and `data:` URLs.
+- Currently supports `https:`, `http:`, `ftp:`, `file:`, and `data:` URLs.
 - Supports opting out of any feature using comprehensive [feature flags].
 - Adheres to the Rust API Guidelines in its [naming conventions].
 - 100% free and unencumbered public domain software.
@@ -55,6 +55,12 @@ use gofer::open;
 let result = gofer::open("https://www.google.com/robots.txt");
 ```
 
+### Reading FTP URLs
+
+```rust
+let result = gofer::open("ftp://ftp.isc.org/welcome.msg");
+```
+
 ### Reading `file:` URLs
 
 ```rust
@@ -83,6 +89,7 @@ Scheme   | Feature  | Summary
 :------- | :------- | :---------------------------------------------------------
 `data:`  | `data`   | Inline data in Base64 or URL-encoded format
 `file:`  | `file`   | Local file path
+`ftp:`   | `ftp`    | FTP
 `http:`  | `http`   | HTTP
 `https:` | `https`  | HTTPS
 `stdin:` | `stdin`  | Standard input stream
