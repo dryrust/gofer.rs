@@ -20,6 +20,14 @@ pub enum Error {
     #[error("invalid `data:` URL body: {0}")]
     InvalidDataUrlBody(#[from] data_url::forgiving_base64::InvalidBase64),
 
+    #[cfg(feature = "file")]
+    #[error("invalid `file:` URL: {0}")]
+    InvalidFileUrl(url::Url),
+
+    #[cfg(feature = "file")]
+    #[error("failed file I/O: {0}")]
+    FailedFileIo(#[from] std::io::Error),
+
     #[cfg(any(feature = "http", feature = "https"))]
     #[error("failed HTTP(S) request: {0}")]
     FailedHttpRequest(#[from] reqwest::Error),
