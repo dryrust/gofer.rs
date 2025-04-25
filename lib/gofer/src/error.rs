@@ -5,39 +5,112 @@ use thiserror::Error;
 pub type Result<T> = core::result::Result<T, Error>;
 
 #[derive(Error, Debug)]
+#[cfg_attr(feature = "miette", derive(miette::Diagnostic))]
 pub enum Error {
     #[error("invalid URL: {0}")]
+    #[cfg_attr(
+        feature = "miette",
+        diagnostic(
+            code(gofer::invalid_url),
+            help("it seems that the URL is malformed in some way"),
+            url(docsrs),
+        )
+    )]
     InvalidUrl(#[from] url::ParseError),
 
     #[error("unknown URL scheme: {0}")]
+    #[cfg_attr(
+        feature = "miette",
+        diagnostic(
+            code(gofer::unknown_scheme),
+            help("there is no protocol handler available for this URL scheme"),
+            url(docsrs),
+        )
+    )]
     UnknownScheme(String),
 
     #[cfg(feature = "data")]
     #[error("invalid data URL: {0}")]
+    #[cfg_attr(
+        feature = "miette",
+        diagnostic(
+            code(gofer::invalid_data_url),
+            help("it seems that the URL is malformed in some way"),
+            url(docsrs),
+        )
+    )]
     InvalidDataUrl(#[from] data_url::DataUrlError),
 
     #[cfg(feature = "data")]
     #[error("invalid data URL body: {0}")]
+    #[cfg_attr(
+        feature = "miette",
+        diagnostic(
+            code(gofer::invalid_data_url_body),
+            help("something went wrong when decoding the Base64-encoded data"),
+            url(docsrs),
+        )
+    )]
     InvalidDataUrlBody(#[from] data_url::forgiving_base64::InvalidBase64),
 
     #[cfg(feature = "file")]
     #[error("invalid file URL: {0}")]
+    #[cfg_attr(
+        feature = "miette",
+        diagnostic(
+            code(gofer::invalid_file_url),
+            help("it seems that the URL is malformed in some way"),
+            url(docsrs),
+        )
+    )]
     InvalidFileUrl(url::Url),
 
     #[cfg(feature = "file")]
     #[error("failed file I/O: {0}")]
+    #[cfg_attr(
+        feature = "miette",
+        diagnostic(
+            code(gofer::failed_file_io),
+            help("something went wrong when opening or reading the file"),
+            url(docsrs),
+        )
+    )]
     FailedFileIo(#[from] std::io::Error),
 
     #[cfg(any(feature = "ftp", feature = "ftps"))]
     #[error("invalid FTP URL: {0}")]
+    #[cfg_attr(
+        feature = "miette",
+        diagnostic(
+            code(gofer::invalid_ftp_url),
+            help("it seems that the URL is malformed in some way"),
+            url(docsrs),
+        )
+    )]
     InvalidFtpUrl(url::Url),
 
     #[cfg(any(feature = "ftp", feature = "ftps"))]
     #[error("failed FTP request: {0}")]
+    #[cfg_attr(
+        feature = "miette",
+        diagnostic(
+            code(gofer::failed_ftp_request),
+            help("something went wrong connecting to the server or requesting the file"),
+            url(docsrs),
+        )
+    )]
     FailedFtpRequest(#[from] suppaftp::FtpError),
 
     #[cfg(any(feature = "http", feature = "https"))]
     #[error("failed HTTP request: {0}")]
+    #[cfg_attr(
+        feature = "miette",
+        diagnostic(
+            code(gofer::failed_http_request),
+            help("something went wrong connecting to the server or requesting the file"),
+            url(docsrs),
+        )
+    )]
     FailedHttpRequest(#[from] reqwest::Error),
 }
 

@@ -29,6 +29,7 @@ file = ["std"]
 ftp = ["dep:percent-encoding", "dep:suppaftp"]
 ftps = ["ftp", "suppaftp?/rustls"]
 git = ["dep:gix-protocol"]
+miette = ["dep:miette"]
 http = ["dep:reqwest", "reqwest?/blocking"]
 https = ["http", "reqwest?/default", "reqwest?/rustls-tls-native-roots"]
 scp = ["dep:ssh2"]
@@ -45,6 +46,7 @@ dogma = { version = "0.1", default-features = false }
 gix-protocol = { version = "0.49", default-features = false, features = [
     "blocking-client",
 ], optional = true }
+miette = { version = "7.5", optional = true }
 percent-encoding = { version = "2.3", default-features = false, optional = true }
 reqwest = { version = "0.12", default-features = false, optional = true }
 ssh2 = { version = "0.9", default-features = false, features = [
