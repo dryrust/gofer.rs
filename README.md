@@ -5,7 +5,7 @@
 [![Package](https://img.shields.io/crates/v/gofer)](https://crates.io/crates/gofer)
 [![Documentation](https://docs.rs/gofer/badge.svg)](https://docs.rs/gofer/)
 
-**Gofer.rs** makes it easy to fetch and read files from URLs in Rust.
+**Gofer.rs** makes it easy to fetch data from any URL in Rust.
 Just call `gofer::open(url)` to get back a `Read`!
 
 ## ✨ Features
