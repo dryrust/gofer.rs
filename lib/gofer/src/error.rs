@@ -16,7 +16,7 @@ pub enum Error<'a> {
             url(docsrs),
         )
     )]
-    InvalidUrl(#[from] dogma::IriError),
+    InvalidUrl(#[from] crate::UrlError),
 
     #[error("unknown URL scheme: {0}")]
     #[cfg_attr(
@@ -63,7 +63,7 @@ pub enum Error<'a> {
             url(docsrs),
         )
     )]
-    InvalidFileUrl(dogma::Iri<'a>),
+    InvalidFileUrl(crate::Url<'a>),
 
     #[cfg(feature = "file")]
     #[error("failed file I/O: {0}")]
@@ -87,7 +87,7 @@ pub enum Error<'a> {
             url(docsrs),
         )
     )]
-    InvalidFtpUrl(dogma::Iri<'a>),
+    InvalidFtpUrl(crate::Url<'a>),
 
     #[cfg(any(feature = "ftp", feature = "ftps"))]
     #[error("failed FTP request: {0}")]

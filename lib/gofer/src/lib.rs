@@ -16,6 +16,8 @@ pub use std::io::{Cursor, Read};
 todo!("the 'std' feature is currently required"); // TODO
 
 pub use dogma::Uri as Url;
+pub use dogma::UriError as UrlError;
+pub use dogma::UriScheme as UrlScheme;
 
 mod features;
 pub use features::*;
