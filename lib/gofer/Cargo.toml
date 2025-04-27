@@ -17,27 +17,37 @@ publish.workspace = true
 [features]
 default = ["all", "std"]
 std = [
+    "clap?/std",
     "data-url?/std",
     "dogma/std",
     "percent-encoding?/std",
     "thiserror/std",
 ]
 all = ["data", "file", "ftp", "http", "https", "stdin"]
+unstable = ["ftps", "git", "scp"]
+
+# Protocols:
 data = ["dep:data-url"]
 file = ["std"]
 ftp = ["dep:percent-encoding", "dep:suppaftp"]
 ftps = ["ftp", "suppaftp?/rustls"]
 git = ["dep:gix-protocol"]
-miette = ["dep:miette"]
 http = ["dep:reqwest", "reqwest?/blocking"]
 https = ["http", "reqwest?/default", "reqwest?/rustls-tls-native-roots"]
 scp = ["dep:ssh2"]
 stdin = ["std"]
-unstable = ["ftps", "git", "scp"]
+
+# Integrations:
+clap = ["dep:clap"]
+miette = ["dep:miette"]
 
 [dev-dependencies]
 
 [dependencies]
+clap = { version = "4.5", default-features = false, features = [
+    "derive",
+    "help",
+], optional = true }
 data-url = { version = "0.3", default-features = false, features = [
     "alloc",
 ], optional = true }

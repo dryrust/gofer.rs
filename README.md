@@ -94,6 +94,10 @@ Scheme   | Feature  | Summary
 `https:` | `https`  | HTTPS
 `stdin:` | `stdin`  | Standard input stream
 
+### Integrations
+
+[Clap], [Dogma], [Miette]
+
 ## 👨‍💻 Development
 
 ```bash
@@ -110,3 +114,7 @@ git clone https://github.com/dryrust/gofer.rs.git
 
 [feature flags]: https://github.com/dryrust/gofer.rs/blob/master/lib/gofer/Cargo.toml
 [naming conventions]: https://rust-lang.github.io/api-guidelines/naming.html
+
+[Clap]: https://crates.io/crates/clap
+[Dogma]: https://crates.io/crates/dogma
+[Miette]: https://crates.io/crates/miette
