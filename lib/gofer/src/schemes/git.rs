@@ -4,6 +4,6 @@ use crate::{Read, Result, Url};
 
 /// See: https://en.wikipedia.org/wiki/Git
 /// See: https://git-scm.com/docs/protocol-v2
-pub fn open(_url: &Url) -> Result<Box<dyn Read>> {
+pub fn open<'a, 'b>(_url: &'a Url<'b>) -> Result<'b, Box<dyn Read>> {
     todo!() // TODO
 }

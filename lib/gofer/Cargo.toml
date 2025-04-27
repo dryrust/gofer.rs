@@ -21,7 +21,6 @@ std = [
     "dogma/std",
     "percent-encoding?/std",
     "thiserror/std",
-    "url/std",
 ]
 all = ["data", "file", "ftp", "http", "https", "stdin"]
 data = ["dep:data-url"]
@@ -42,11 +41,16 @@ unstable = ["ftps", "git", "scp"]
 data-url = { version = "0.3", default-features = false, features = [
     "alloc",
 ], optional = true }
-dogma = { version = "0.1", default-features = false }
+dogma = { version = "0.1.5", default-features = false, features = [
+    "iri",
+    "uri",
+] }
 gix-protocol = { version = "0.49", default-features = false, features = [
     "blocking-client",
 ], optional = true }
-miette = { version = "7.5", optional = true }
+miette = { version = "7.5", default-features = false, features = [
+    "derive",
+], optional = true }
 percent-encoding = { version = "2.3", default-features = false, optional = true }
 reqwest = { version = "0.12", default-features = false, optional = true }
 ssh2 = { version = "0.9", default-features = false, features = [
@@ -54,4 +58,3 @@ ssh2 = { version = "0.9", default-features = false, features = [
 ], optional = true }
 suppaftp = { version = "6", default-features = false, optional = true }
 thiserror = { version = "2", default-features = false }
-url = { version = "2.5", default-features = false }

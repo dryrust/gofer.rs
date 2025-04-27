@@ -7,13 +7,14 @@ use suppaftp::FtpStream;
 
 /// See: https://en.wikipedia.org/wiki/FTP
 /// See: https://en.wikipedia.org/wiki/FTPS
-pub fn open(url: &Url, _secure: bool) -> Result<Box<dyn Read>> {
-    let username = match url.username() {
-        "" => "anonymous",
-        username => username,
-    };
+pub fn open<'a, 'b>(url: &'a Url<'b>, _secure: bool) -> Result<'b, Box<dyn Read>> {
+    let authority = url
+        .authority()
+        .ok_or_else(|| Error::InvalidFtpUrl(url.clone()))?;
 
-    let password = url
+    let username = authority.username().unwrap_or("anonymous");
+
+    let password = authority
         .password()
         .map(|s| percent_decode(s.as_bytes()).decode_utf8_lossy()) // TODO
         .unwrap_or(Cow::default());
@@ -32,13 +33,9 @@ pub fn open(url: &Url, _secure: bool) -> Result<Box<dyn Read>> {
 
     let dirname = path.join("/");
 
-    let addrs = url
-        .socket_addrs(|| None)
-        .map_err(|_| Error::InvalidFtpUrl(url.clone()))?;
+    let mut stream = FtpStream::connect(&authority)?;
 
-    let mut stream = FtpStream::connect(&*addrs)?;
-
-    stream.login(username, &password)?;
+    stream.login(username, password.as_ref())?;
 
     if dirname != "" {
         stream.cwd(dirname)?;

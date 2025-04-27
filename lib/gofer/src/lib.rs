@@ -15,7 +15,7 @@ pub use std::io::{Cursor, Read};
 #[cfg(not(feature = "std"))]
 todo!("the 'std' feature is currently required"); // TODO
 
-pub use url::Url;
+pub use dogma::Uri as Url;
 
 mod features;
 pub use features::*;
