@@ -16,11 +16,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-      include:
-        - name: Linux
-          os: ubuntu-latest
-        - name: Windows
-          os: windows-latest
+        include:
+          - name: Linux
+            os: ubuntu-latest
+          - name: Windows
+            os: windows-latest
     name: Check ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     steps:
