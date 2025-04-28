@@ -32,29 +32,28 @@ jobs:
         with:
           toolchain: 1.81.0
           components: rustfmt
-          targets: ${{ matrix.target }}
       - name: Build library (default features)
         if: ${{ always() }}
-        run: cargo +${{ steps.install-rust.outputs.name }} check --target ${{ matrix.target }} --workspace --keep-going --lib
+        run: cargo +${{ steps.install-rust.outputs.name }} check --workspace --keep-going --lib
       - name: Build library (no default features)
         if: ${{ always() }}
-        run: cargo +${{ steps.install-rust.outputs.name }} check --target ${{ matrix.target }} --workspace --keep-going --lib --no-default-featrues
+        run: cargo +${{ steps.install-rust.outputs.name }} check --workspace --keep-going --lib --no-default-featrues
       - name: Build library (all features)
         if: ${{ always() }}
-        run: cargo +${{ steps.install-rust.outputs.name }} check --target ${{ matrix.target }} --workspace --keep-going --lib --all-features
+        run: cargo +${{ steps.install-rust.outputs.name }} check --workspace --keep-going --lib --all-features
       - name: Build library (all features, no std)
         if: ${{ always() }}
-        run: cargo +${{ steps.install-rust.outputs.name }} check --target ${{ matrix.target }} --workspace --keep-going --lib --no-default-features --features "all"
+        run: cargo +${{ steps.install-rust.outputs.name }} check --workspace --keep-going --lib --no-default-features --features "all"
       - name: Build library (only std)
         if: ${{ always() }}
-        run: cargo +${{ steps.install-rust.outputs.name }} check --target ${{ matrix.target }} --workspace --keep-going --lib --no-default-features --features "std"
+        run: cargo +${{ steps.install-rust.outputs.name }} check --workspace --keep-going --lib --no-default-features --features "std"
       - name: Build examples
-        run: cargo +${{ steps.install-rust.outputs.name }} check --target ${{ matrix.target }} --workspace --keep-going --examples
+        run: cargo +${{ steps.install-rust.outputs.name }} check --workspace --keep-going --examples
       - name: Build tests
         id: check-tests
-        run: cargo +${{ steps.install-rust.outputs.name }} check --target ${{ matrix.target }} --workspace --keep-going --tests
+        run: cargo +${{ steps.install-rust.outputs.name }} check --workspace --keep-going --tests
       - name: Run tests
         id: run-tests
         if: ${{ steps.check-tests.outcome == 'success' }}
         run: |
-          cargo +${{ steps.install-rust.outputs.name }} test --target ${{ matrix.target }} --workspace --tests --no-fail-fast
+          cargo +${{ steps.install-rust.outputs.name }} test --workspace --tests --no-fail-fast
