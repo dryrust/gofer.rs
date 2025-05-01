@@ -5,7 +5,7 @@ use std::fs::File;
 
 /// See: https://en.wikipedia.org/wiki/File_URI_scheme
 /// See: https://www.rfc-editor.org/rfc/rfc8089.html
-pub fn open<'a, 'b>(url: &'a Url<'b>) -> Result<'b, Box<dyn Read>> {
+pub fn open<'a, 'b>(url: &'a Url<'b>) -> Result<Box<dyn Read>> {
     // See: https://docs.rs/dogma/latest/dogma/enums/enum.Iri.html#method.to_path
     let path = url
         .to_path()

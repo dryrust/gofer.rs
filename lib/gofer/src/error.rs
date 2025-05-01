@@ -2,7 +2,7 @@
 
 use thiserror::Error;
 
-pub type Result<'a, T> = core::result::Result<T, Error>;
+pub type Result<T> = core::result::Result<T, Error>;
 
 #[derive(Error, Debug)]
 #[cfg_attr(feature = "miette", derive(miette::Diagnostic))]
@@ -150,7 +150,7 @@ impl Into<std::io::Error> for Error {
 impl<'a> TryInto<data_url::DataUrlError> for Error {
     type Error = Error;
 
-    fn try_into(self) -> Result<'a, data_url::DataUrlError> {
+    fn try_into(self) -> Result<data_url::DataUrlError> {
         match self {
             Error::InvalidDataUrl(e) => Ok(e),
             _ => Err(self),
@@ -162,7 +162,7 @@ impl<'a> TryInto<data_url::DataUrlError> for Error {
 impl<'a> TryInto<data_url::forgiving_base64::InvalidBase64> for Error {
     type Error = Error;
 
-    fn try_into(self) -> Result<'a, data_url::forgiving_base64::InvalidBase64> {
+    fn try_into(self) -> Result<data_url::forgiving_base64::InvalidBase64> {
         match self {
             Error::InvalidDataUrlBody(e) => Ok(e),
             _ => Err(self),
@@ -174,7 +174,7 @@ impl<'a> TryInto<data_url::forgiving_base64::InvalidBase64> for Error {
 impl<'a> TryInto<suppaftp::FtpError> for Error {
     type Error = Error;
 
-    fn try_into(self) -> Result<'a, suppaftp::FtpError> {
+    fn try_into(self) -> Result<suppaftp::FtpError> {
         match self {
             Error::FailedFtpRequest(e) => Ok(e),
             _ => Err(self),
@@ -186,7 +186,7 @@ impl<'a> TryInto<suppaftp::FtpError> for Error {
 impl<'a> TryInto<reqwest::Error> for Error {
     type Error = Error;
 
-    fn try_into(self) -> Result<'a, reqwest::Error> {
+    fn try_into(self) -> Result<reqwest::Error> {
         match self {
             Error::FailedHttpRequest(e) => Ok(e),
             _ => Err(self),

@@ -2,7 +2,7 @@
 
 use crate::{Error, Read, Result, Url, UrlScheme};
 
-pub fn open<'a>(url: impl AsRef<str>) -> Result<'a, Box<dyn Read>> {
+pub fn open<'a>(url: impl AsRef<str>) -> Result<Box<dyn Read>> {
     let url = url.as_ref().parse::<Url>()?;
 
     // TODO: look up the scheme in a protocol handler registry
@@ -40,6 +40,6 @@ pub fn open<'a>(url: impl AsRef<str>) -> Result<'a, Box<dyn Read>> {
 }
 
 #[cfg(feature = "std")]
-pub fn open_buffered<'a>(url: impl AsRef<str>) -> Result<'a, std::io::BufReader<Box<dyn Read>>> {
+pub fn open_buffered<'a>(url: impl AsRef<str>) -> Result<std::io::BufReader<Box<dyn Read>>> {
     Ok(std::io::BufReader::new(open(url)?))
 }

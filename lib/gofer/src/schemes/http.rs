@@ -7,7 +7,7 @@ static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_V
 
 /// See: https://en.wikipedia.org/wiki/HTTP
 /// See: https://en.wikipedia.org/wiki/HTTPS
-pub fn open<'a, 'b>(url: &'a Url<'b>, secure: bool) -> Result<'b, Box<dyn Read>> {
+pub fn open<'a, 'b>(url: &'a Url<'b>, secure: bool) -> Result<Box<dyn Read>> {
     // See: https://docs.rs/reqwest/latest/reqwest/blocking/struct.ClientBuilder.html
     let mut client = ClientBuilder::new()
         .user_agent(USER_AGENT)

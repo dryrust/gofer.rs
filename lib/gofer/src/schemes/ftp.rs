@@ -7,7 +7,7 @@ use suppaftp::FtpStream;
 
 /// See: https://en.wikipedia.org/wiki/FTP
 /// See: https://en.wikipedia.org/wiki/FTPS
-pub fn open<'a, 'b>(url: &'a Url<'b>, _secure: bool) -> Result<'b, Box<dyn Read>> {
+pub fn open<'a, 'b>(url: &'a Url<'b>, _secure: bool) -> Result<Box<dyn Read>> {
     let authority = url
         .authority()
         .ok_or_else(|| Error::InvalidFtpUrl(url.to_string()))?;
