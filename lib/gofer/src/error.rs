@@ -2,11 +2,11 @@
 
 use thiserror::Error;
 
-pub type Result<'a, T> = core::result::Result<T, Error<'a>>;
+pub type Result<'a, T> = core::result::Result<T, Error>;
 
 #[derive(Error, Debug)]
 #[cfg_attr(feature = "miette", derive(miette::Diagnostic))]
-pub enum Error<'a> {
+pub enum Error {
     #[error("invalid URL: {0}")]
     #[cfg_attr(
         feature = "miette",
@@ -63,7 +63,7 @@ pub enum Error<'a> {
             url(docsrs),
         )
     )]
-    InvalidFileUrl(crate::Url<'a>),
+    InvalidFileUrl(String),
 
     #[cfg(feature = "file")]
     #[error("failed file I/O: {0}")]
@@ -87,7 +87,7 @@ pub enum Error<'a> {
             url(docsrs),
         )
     )]
-    InvalidFtpUrl(crate::Url<'a>),
+    InvalidFtpUrl(String),
 
     #[cfg(any(feature = "ftp", feature = "ftps"))]
     #[error("failed FTP request: {0}")]
@@ -115,7 +115,7 @@ pub enum Error<'a> {
 }
 
 #[cfg(feature = "std")]
-impl Into<std::io::Error> for Error<'_> {
+impl Into<std::io::Error> for Error {
     fn into(self) -> std::io::Error {
         use std::io::ErrorKind;
         match self {
@@ -147,8 +147,8 @@ impl Into<std::io::Error> for Error<'_> {
 }
 
 #[cfg(feature = "data")]
-impl<'a> TryInto<data_url::DataUrlError> for Error<'a> {
-    type Error = Error<'a>;
+impl<'a> TryInto<data_url::DataUrlError> for Error {
+    type Error = Error;
 
     fn try_into(self) -> Result<'a, data_url::DataUrlError> {
         match self {
@@ -159,8 +159,8 @@ impl<'a> TryInto<data_url::DataUrlError> for Error<'a> {
 }
 
 #[cfg(feature = "data")]
-impl<'a> TryInto<data_url::forgiving_base64::InvalidBase64> for Error<'a> {
-    type Error = Error<'a>;
+impl<'a> TryInto<data_url::forgiving_base64::InvalidBase64> for Error {
+    type Error = Error;
 
     fn try_into(self) -> Result<'a, data_url::forgiving_base64::InvalidBase64> {
         match self {
@@ -171,8 +171,8 @@ impl<'a> TryInto<data_url::forgiving_base64::InvalidBase64> for Error<'a> {
 }
 
 #[cfg(any(feature = "ftp", feature = "ftps"))]
-impl<'a> TryInto<suppaftp::FtpError> for Error<'a> {
-    type Error = Error<'a>;
+impl<'a> TryInto<suppaftp::FtpError> for Error {
+    type Error = Error;
 
     fn try_into(self) -> Result<'a, suppaftp::FtpError> {
         match self {
@@ -183,8 +183,8 @@ impl<'a> TryInto<suppaftp::FtpError> for Error<'a> {
 }
 
 #[cfg(any(feature = "http", feature = "https"))]
-impl<'a> TryInto<reqwest::Error> for Error<'a> {
-    type Error = Error<'a>;
+impl<'a> TryInto<reqwest::Error> for Error {
+    type Error = Error;
 
     fn try_into(self) -> Result<'a, reqwest::Error> {
         match self {

@@ -10,7 +10,7 @@ use suppaftp::FtpStream;
 pub fn open<'a, 'b>(url: &'a Url<'b>, _secure: bool) -> Result<'b, Box<dyn Read>> {
     let authority = url
         .authority()
-        .ok_or_else(|| Error::InvalidFtpUrl(url.clone()))?;
+        .ok_or_else(|| Error::InvalidFtpUrl(url.to_string()))?;
 
     let username = authority.username().unwrap_or("anonymous");
 
@@ -29,7 +29,7 @@ pub fn open<'a, 'b>(url: &'a Url<'b>, _secure: bool) -> Result<'b, Box<dyn Read>
 
     let basename = path
         .pop()
-        .ok_or_else(|| Error::InvalidFtpUrl(url.clone()))?;
+        .ok_or_else(|| Error::InvalidFtpUrl(url.to_string()))?;
 
     let dirname = path.join("/");
 
