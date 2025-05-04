@@ -4,6 +4,6 @@ use crate::{Read, Result, Url};
 
 /// See: https://en.wikipedia.org/wiki/Secure_copy_protocol
 /// See: https://man.openbsd.org/scp
-pub fn open<'a, 'b>(_url: &'a Url<'b>) -> Result<'b, Box<dyn Read>> {
+pub fn open<'a, 'b>(_url: &'a Url<'b>) -> Result<Box<dyn Read>> {
     todo!() // TODO
 }

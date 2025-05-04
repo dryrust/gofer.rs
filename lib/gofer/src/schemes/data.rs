@@ -6,7 +6,7 @@ use data_url::DataUrl;
 /// See: https://en.wikipedia.org/wiki/Data_URI_scheme
 /// See: https://fetch.spec.whatwg.org/#data-urls
 /// See: https://www.rfc-editor.org/rfc/rfc2397.html
-pub fn open<'a, 'b>(url: &'a Url<'b>) -> Result<'b, Box<dyn Read>> {
+pub fn open<'a, 'b>(url: &'a Url<'b>) -> Result<Box<dyn Read>> {
     // See: https://docs.rs/data-url/latest/data_url/struct.DataUrl.html#method.process
     let url = DataUrl::process(url.as_str())?;
 
