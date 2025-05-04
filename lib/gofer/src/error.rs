@@ -147,7 +147,7 @@ impl Into<std::io::Error> for Error {
 }
 
 #[cfg(feature = "data")]
-impl<'a> TryInto<data_url::DataUrlError> for Error {
+impl TryInto<data_url::DataUrlError> for Error {
     type Error = Error;
 
     fn try_into(self) -> Result<data_url::DataUrlError> {
@@ -159,7 +159,7 @@ impl<'a> TryInto<data_url::DataUrlError> for Error {
 }
 
 #[cfg(feature = "data")]
-impl<'a> TryInto<data_url::forgiving_base64::InvalidBase64> for Error {
+impl TryInto<data_url::forgiving_base64::InvalidBase64> for Error {
     type Error = Error;
 
     fn try_into(self) -> Result<data_url::forgiving_base64::InvalidBase64> {
@@ -171,7 +171,7 @@ impl<'a> TryInto<data_url::forgiving_base64::InvalidBase64> for Error {
 }
 
 #[cfg(any(feature = "ftp", feature = "ftps"))]
-impl<'a> TryInto<suppaftp::FtpError> for Error {
+impl TryInto<suppaftp::FtpError> for Error {
     type Error = Error;
 
     fn try_into(self) -> Result<suppaftp::FtpError> {
@@ -183,7 +183,7 @@ impl<'a> TryInto<suppaftp::FtpError> for Error {
 }
 
 #[cfg(any(feature = "http", feature = "https"))]
-impl<'a> TryInto<reqwest::Error> for Error {
+impl TryInto<reqwest::Error> for Error {
     type Error = Error;
 
     fn try_into(self) -> Result<reqwest::Error> {
