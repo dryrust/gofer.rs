@@ -96,7 +96,11 @@ Scheme   | Feature  | Summary
 
 ### Integrations
 
-[Clap], [Dogma], [Miette]
+Crate (Feature) | Version | Usage | Summary
+:--- | :--- | :--- | :---
+[clap] &nbsp;<sub>(`"clap"`)</sub> | 4.5 | [![clap](https://docs.rs/clap/badge.svg)](https://docs.rs/clap/) | Implements `clap::builder::TypedValueParser` (TBD)
+[miette] &nbsp;<sub>(`"miette"`)</sub> | 7.5 | [![miette](https://docs.rs/miette/badge.svg)](https://docs.rs/miette/) | Derives `miette::Diagnostic` on `gofer::Error`
+<img width="220" height="1"/> | <img width="110" height="1"/> | <img width="100" height="1"/> | &nbsp;
 
 ## 👨‍💻 Development
 
@@ -115,6 +119,5 @@ git clone https://github.com/dryrust/gofer.rs.git
 [feature flags]: https://github.com/dryrust/gofer.rs/blob/master/lib/gofer/Cargo.toml
 [naming conventions]: https://rust-lang.github.io/api-guidelines/naming.html
 
-[Clap]: https://crates.io/crates/clap
-[Dogma]: https://crates.io/crates/dogma
-[Miette]: https://crates.io/crates/miette
+[clap]: https://crates.io/crates/clap
+[miette]: https://crates.io/crates/miette
