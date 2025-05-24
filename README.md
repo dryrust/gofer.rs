@@ -1,7 +1,7 @@
 # Gofer.rs
 
 [![License](https://img.shields.io/badge/license-Public%20Domain-blue.svg)](https://unlicense.org)
-[![Compatibility](https://img.shields.io/badge/rust-1.81%2B-blue)](https://blog.rust-lang.org/2024/09/05/Rust-1.81.0.html)
+[![Compatibility](https://img.shields.io/badge/rust-1.81%2B-blue)](https://blog.rust-lang.org/2024/09/05/Rust-1.81.0/)
 [![Package](https://img.shields.io/crates/v/gofer)](https://crates.io/crates/gofer)
 [![Documentation](https://docs.rs/gofer/badge.svg)](https://docs.rs/gofer/)
 
@@ -43,7 +43,7 @@ gofer = { version = "0.1", default-features = false, features = ["file"] }
 
 ## 👉 Examples
 
-### Importing the library
+### Importing the Library
 
 ```rust
 use gofer::open;
