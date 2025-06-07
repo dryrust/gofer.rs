@@ -23,7 +23,7 @@ std = [
     "percent-encoding?/std",
     "thiserror/std",
 ]
-all = ["data", "file", "ftp", "http", "https", "stdin"]
+all = ["data", "file", "ftp", "http", "https", "ipfs", "stdin"]
 unstable = ["ftps", "git", "scp"]
 
 # Protocols:
@@ -34,6 +34,7 @@ ftps = ["ftp", "suppaftp?/rustls"]
 git = ["dep:gix-protocol"]
 http = ["dep:reqwest", "reqwest?/blocking"]
 https = ["http", "reqwest?/default", "reqwest?/rustls-tls-native-roots"]
+ipfs = ["dep:reqwest", "reqwest?/blocking"]
 scp = ["dep:ssh2"]
 stdin = ["std"]
 
@@ -45,26 +46,26 @@ miette = ["dep:miette"]
 
 [dependencies]
 clap = { version = "4.5", default-features = false, features = [
-    "derive",
-    "help",
+	"derive",
+	"help",
 ], optional = true }
 data-url = { version = "0.3", default-features = false, features = [
-    "alloc",
+	"alloc",
 ], optional = true }
 dogma = { version = "0.1.5", default-features = false, features = [
-    "iri",
-    "uri",
+	"iri",
+	"uri",
 ] }
 gix-protocol = { version = "0.49", default-features = false, features = [
-    "blocking-client",
+	"blocking-client",
 ], optional = true }
 miette = { version = "7.5", default-features = false, features = [
-    "derive",
+	"derive",
 ], optional = true }
 percent-encoding = { version = "2.3", default-features = false, optional = true }
 reqwest = { version = "0.12", default-features = false, optional = true }
 ssh2 = { version = "0.9", default-features = false, features = [
-    "vendored-openssl",
+	"vendored-openssl",
 ], optional = true }
 suppaftp = { version = "6", default-features = false, optional = true }
 thiserror = { version = "2", default-features = false }

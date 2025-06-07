@@ -15,6 +15,9 @@ pub mod git;
 #[cfg(any(feature = "http", feature = "https"))]
 pub mod http;
 
+#[cfg(feature = "ipfs")]
+pub mod ipfs;
+
 #[cfg(feature = "scp")]
 pub mod scp;
 
