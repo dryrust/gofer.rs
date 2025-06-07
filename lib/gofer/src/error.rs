@@ -127,10 +127,10 @@ pub enum Error {
 }
 
 #[cfg(feature = "std")]
-impl Into<std::io::Error> for Error {
-    fn into(self) -> std::io::Error {
+impl From<Error> for std::io::Error {
+    fn from(value: Error) -> Self {
         use std::io::ErrorKind;
-        match self {
+        match value {
             Error::InvalidUrl(e) => std::io::Error::new(ErrorKind::InvalidInput, e),
             Error::UnknownScheme(s) => std::io::Error::new(ErrorKind::InvalidInput, s),
 
