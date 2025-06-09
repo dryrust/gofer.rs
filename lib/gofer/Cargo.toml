@@ -23,7 +23,7 @@ std = [
     "percent-encoding?/std",
     "thiserror/std",
 ]
-all = ["data", "file", "ftp", "http", "https", "stdin"]
+all = ["data", "file", "ftp", "http", "https", "ipfs", "stdin"]
 unstable = ["ftps", "git", "scp"]
 
 # Protocols:
@@ -34,6 +34,7 @@ ftps = ["ftp", "suppaftp?/rustls"]
 git = ["dep:gix-protocol"]
 http = ["dep:reqwest", "reqwest?/blocking"]
 https = ["http", "reqwest?/default", "reqwest?/rustls-tls-native-roots"]
+ipfs = ["dep:reqwest", "reqwest?/blocking"]
 scp = ["dep:ssh2"]
 stdin = ["std"]
 

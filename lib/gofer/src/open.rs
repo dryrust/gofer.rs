@@ -29,6 +29,9 @@ pub fn open(url: impl AsRef<str>) -> Result<Box<dyn Read>> {
         #[cfg(feature = "https")]
         UrlScheme::Https => crate::schemes::http::open(&url, true),
 
+        #[cfg(feature = "ipfs")]
+        UrlScheme::Ipfs => crate::schemes::ipfs::open(&url),
+
         #[cfg(feature = "scp")]
         UrlScheme::Scp => crate::schemes::scp::open(&url),
 

@@ -112,13 +112,25 @@ pub enum Error {
         )
     )]
     FailedHttpRequest(#[from] reqwest::Error),
+
+    #[cfg(feature = "ipfs")]
+    #[error("invalid IPFS URL: {0}")]
+    #[cfg_attr(
+        feature = "miette",
+        diagnostic(
+            code(gofer::invalid_ipfs_url),
+            help("it seems that the URL is malformed in some way"),
+            url(docsrs),
+        )
+    )]
+    InvalidIpfsUrl(String),
 }
 
 #[cfg(feature = "std")]
-impl Into<std::io::Error> for Error {
-    fn into(self) -> std::io::Error {
+impl From<Error> for std::io::Error {
+    fn from(value: Error) -> Self {
         use std::io::ErrorKind;
-        match self {
+        match value {
             Error::InvalidUrl(e) => std::io::Error::new(ErrorKind::InvalidInput, e),
             Error::UnknownScheme(s) => std::io::Error::new(ErrorKind::InvalidInput, s),
 
@@ -142,6 +154,9 @@ impl Into<std::io::Error> for Error {
 
             #[cfg(any(feature = "http", feature = "https"))]
             Error::FailedHttpRequest(_e) => std::io::Error::from(ErrorKind::Other), // FIXME
+
+            #[cfg(feature = "ipfs")]
+            Error::InvalidIpfsUrl(u) => std::io::Error::new(ErrorKind::InvalidInput, u.as_str()),
         }
     }
 }
