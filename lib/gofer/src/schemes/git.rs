@@ -56,17 +56,17 @@ fn map_git_url_to_raw_url(url_str: &str) -> Result<String> {
 
     let owner = components[1];
     let repo = components[2];
-    let branch = components[3];
+    let version = components[3];
     let file_path = components[4..].join("/");
 
     match *host {
         "github.com" => Ok(format!(
-            "https://raw.githubusercontent.com/{}/{}/refs/heads/{}/{}",
-            owner, repo, branch, file_path
+            "https://raw.githubusercontent.com/{}/{}/{}/{}",
+            owner, repo, version, file_path
         )),
         "gitlab.com" => Ok(format!(
             "https://gitlab.com/{}/{}/-/raw/{}/{}",
-            owner, repo, branch, file_path
+            owner, repo, version, file_path
         )),
         _ => Err(Error::InvalidGitUrl(format!(
             "Unsupported git host: {}",
@@ -86,7 +86,14 @@ mod test {
                 "git://github.com/dryrust/gofer.rs/master/lib/gofer/src/schemes/git.rs"
             )
             .unwrap(),
-            "https://raw.githubusercontent.com/dryrust/gofer.rs/refs/heads/master/lib/gofer/src/schemes/git.rs"
+            "https://raw.githubusercontent.com/dryrust/gofer.rs/master/lib/gofer/src/schemes/git.rs"
+        );
+        assert_eq!(
+            map_git_url_to_raw_url(
+                "git://github.com/dryrust/gofer.rs/f4ea4a585c009aefd570cefcb6062dc5d579c6ab/VERSION"
+            )
+            .unwrap(),
+            "https://raw.githubusercontent.com/dryrust/gofer.rs/f4ea4a585c009aefd570cefcb6062dc5d579c6ab/VERSION"
         );
         assert_eq!(
             map_git_url_to_raw_url("git://gitlab.com/rust-lang/rust/master/src/README.md").unwrap(),
