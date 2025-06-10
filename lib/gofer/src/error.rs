@@ -113,6 +113,18 @@ pub enum Error {
     )]
     FailedHttpRequest(#[from] reqwest::Error),
 
+    #[cfg(feature = "git")]
+    #[error("invalid Git URL: {0}")]
+    #[cfg_attr(
+        feature = "miette",
+        diagnostic(
+            code(gofer::invalid_git_url),
+            help("it seems that the URL is malformed in some way"),
+            url(docsrs),
+        )
+    )]
+    InvalidGitUrl(String),
+
     #[cfg(feature = "ipfs")]
     #[error("invalid IPFS URL: {0}")]
     #[cfg_attr(
@@ -154,6 +166,9 @@ impl From<Error> for std::io::Error {
 
             #[cfg(any(feature = "http", feature = "https"))]
             Error::FailedHttpRequest(_e) => std::io::Error::from(ErrorKind::Other), // FIXME
+
+            #[cfg(feature = "git")]
+            Error::InvalidGitUrl(u) => std::io::Error::new(ErrorKind::InvalidInput, u.as_str()),
 
             #[cfg(feature = "ipfs")]
             Error::InvalidIpfsUrl(u) => std::io::Error::new(ErrorKind::InvalidInput, u.as_str()),
