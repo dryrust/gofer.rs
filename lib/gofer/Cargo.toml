@@ -33,7 +33,7 @@ ftp = ["dep:percent-encoding", "dep:suppaftp"]
 ftps = ["ftp", "suppaftp?/rustls"]
 git = ["dep:reqwest", "reqwest?/blocking"]
 http = ["dep:reqwest", "reqwest?/blocking"]
-https = ["http", "reqwest?/default", "reqwest?/rustls-tls-native-roots"]
+https = ["http", "reqwest?/http2", "reqwest?/rustls-tls-native-roots"]
 ipfs = ["dep:reqwest", "reqwest?/blocking"]
 scp = ["dep:ssh2"]
 stdin = ["std"]
@@ -60,7 +60,10 @@ miette = { version = "7.5", default-features = false, features = [
     "derive",
 ], optional = true }
 percent-encoding = { version = "2.3", default-features = false, optional = true }
-reqwest = { version = "0.12", default-features = false, optional = true }
+reqwest = { version = "0.12", default-features = false, features = [
+    "charset",
+    "rustls-tls",
+], optional = true }
 ssh2 = { version = "0.9", default-features = false, features = [
     "vendored-openssl",
 ], optional = true }
