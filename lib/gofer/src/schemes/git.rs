@@ -1,7 +1,7 @@
 // This is free and unencumbered software released into the public domain.
 
 use crate::{Error, Read, Result, Url};
-use reqwest::{blocking::ClientBuilder, redirect};
+use ureq::{Agent, tls::{TlsConfig, TlsProvider}};
 
 static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
 
@@ -15,19 +15,25 @@ static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_V
 /// See: https://git-scm.com/docs/gitweb
 /// See: https://docs.github.com/en/repositories/working-with-files/using-files/getting-permanent-links-to-files
 pub fn open<'a, 'b>(url: &'a Url<'b>) -> Result<Box<dyn Read>> {
-    // See: https://docs.rs/reqwest/latest/reqwest/blocking/struct.ClientBuilder.html
-    let client = ClientBuilder::new()
+    // See: https://docs.rs/ureq/3.0.12/ureq/struct.Agent.html
+    let agent: Agent = Agent::config_builder()
         .user_agent(USER_AGENT)
-        .redirect(redirect::Policy::default())
-        .https_only(true);
+        .tls_config(
+            TlsConfig::builder()
+                .provider(TlsProvider::Rustls)
+                .build()
+        )
+        .build()
+        .into();
 
     let url = map_git_url_to_raw_url(url.as_str())?;
 
-    // See: https://docs.rs/reqwest/latest/reqwest/blocking/struct.Client.html#method.get
-    // See: https://docs.rs/reqwest/latest/reqwest/blocking/struct.RequestBuilder.html
-    let response = client.build()?.get(url).send()?;
+    // See: https://docs.rs/ureq/3.0.12/ureq/struct.Agent.html#method.get
+    // See: https://docs.rs/ureq/3.0.12/ureq/struct.RequestBuilder.html#method.call
+    let response = agent.get(&url).call()?;
+    let (_headers, body) = response.into_parts();
 
-    Ok(Box::new(response))
+    Ok(Box::new(body.into_reader()))
 }
 
 /// Maps a git URL to a raw content URL for supported git providers.
