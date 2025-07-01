@@ -1,23 +1,26 @@
 // This is free and unencumbered software released into the public domain.
 
 use crate::{Error, Read, Result, Url};
-use ureq::{Agent, tls::{TlsConfig, TlsProvider}};
+use crate::schemes::utils;
 
-static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
 static GATEWAY: &str = "https://ipfs.io";
 
-/// See: https://en.wikipedia.org/wiki/InterPlanetary_File_System
+/// Fetches a file from the InterPlanetary File System (IPFS) using a gateway.
+///
+/// The function converts an IPFS URL (e.g., `ipfs://<content-id>`) to a gateway URL
+/// and performs an HTTPS GET request to retrieve the file content as a readable stream.
+///
+/// # Arguments
+/// * `url` - The IPFS URL specifying the content ID (e.g., `ipfs://Qm...`).
+///
+/// # Returns
+/// A `Result` containing a boxed readable stream (`Box<dyn Read>`) on success, or an `Error` if the URL is invalid.
+///
+/// # References
+/// - [InterPlanetary File System](https://en.wikipedia.org/wiki/InterPlanetary_File_System)
 pub fn open<'a, 'b>(url: &'a Url<'b>) -> Result<Box<dyn Read>> {
     // See: https://docs.rs/ureq/3.0.12/ureq/struct.Agent.html
-    let agent: Agent = Agent::config_builder()
-        .user_agent(USER_AGENT)
-        .tls_config(
-            TlsConfig::builder()
-                .provider(TlsProvider::Rustls)
-                .build()
-        )
-        .build()
-        .into();
+    let agent = utils::new_agent(true, None);
 
     let url = url
         .as_str()
@@ -27,8 +30,5 @@ pub fn open<'a, 'b>(url: &'a Url<'b>) -> Result<Box<dyn Read>> {
 
     // See: https://docs.rs/ureq/3.0.12/ureq/struct.Agent.html#method.get
     // See: https://docs.rs/ureq/3.0.12/ureq/struct.RequestBuilder.html#method.call
-    let response = agent.get(&url).call()?;
-    let (_headers, body) = response.into_parts();
-
-    Ok(Box::new(body.into_reader()))
+    utils::fetch(&agent, &url)
 }
