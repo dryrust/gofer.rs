@@ -29,6 +29,7 @@ mod open;
 pub use open::*;
 
 mod schemes;
+pub use schemes::*;
 
 #[doc = include_str!("../../../README.md")]
 #[cfg(doctest)]
