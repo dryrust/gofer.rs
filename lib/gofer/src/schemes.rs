@@ -23,3 +23,4 @@ pub mod scp;
 
 #[cfg(feature = "stdin")]
 pub mod stdin;
+mod utils;
