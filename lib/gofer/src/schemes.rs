@@ -25,4 +25,4 @@ pub mod scp;
 pub mod stdin;
 
 #[cfg(any(feature = "http", feature = "https", feature = "git", feature = "ipfs"))]
-mod utils;
+mod request;
