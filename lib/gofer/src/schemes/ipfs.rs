@@ -46,11 +46,11 @@ pub fn open<'a, 'b>(url: &'a Url<'b>) -> Result<Box<dyn Read>> {
 pub fn open_with_config<'a, 'b>(url: &'a Url<'b>, config: RequestConfig) -> Result<Box<dyn Read>> {
     // See: https://docs.rs/ureq/3.0.12/ureq/struct.Agent.html
     let agent = request::new_agent(true, None);
-    let url = map_ipfs_url_to_gateway_url(url.as_str())?;
+    let gateway_url = map_ipfs_url_to_gateway_url(url.as_str())?;
 
     // See: https://docs.rs/ureq/3.0.12/ureq/struct.Agent.html#method.get
     // See: https://docs.rs/ureq/3.0.12/ureq/struct.RequestBuilder.html#method.call
-    request::fetch_with_config(&agent, &url, &config)
+    request::fetch_with_config(&agent, &gateway_url, &config)
 }
 
 /// Maps an IPFS URL to a gateway URL for file retrieval.
