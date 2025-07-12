@@ -23,3 +23,6 @@ pub mod scp;
 
 #[cfg(feature = "stdin")]
 pub mod stdin;
+
+#[cfg(any(feature = "http", feature = "https", feature = "git", feature = "ipfs"))]
+mod request;

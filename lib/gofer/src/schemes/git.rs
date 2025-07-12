@@ -1,38 +1,78 @@
 // This is free and unencumbered software released into the public domain.
 
-use crate::{Error, Read, Result, Url};
-use reqwest::{blocking::ClientBuilder, redirect};
+use crate::{Error, Read, RequestConfig, Result, Url};
+use crate::schemes::request;
 
-static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
-
-/// Downloads a file from a git repository.
+/// Downloads a file from a git repository using a raw content URL.
 ///
-/// Supports:
-/// - GitHub: git://github.com/owner/repo/branch/...path
-/// - GitLab: git://gitlab.com/owner/repo/branch/...path
+/// Supports fetching files from:
+/// - GitHub: `git://github.com/owner/repo/branch/...path`
+/// - GitLab: `git://gitlab.com/owner/repo/branch/...path`
 ///
-/// See: https://git-scm.com/docs/protocol-v2
-/// See: https://git-scm.com/docs/gitweb
-/// See: https://docs.github.com/en/repositories/working-with-files/using-files/getting-permanent-links-to-files
+/// The function maps the provided git URL to a raw content URL and performs an HTTP GET request
+/// to retrieve the file content as a readable stream.
+///
+/// # Arguments
+/// * `url` - The git URL specifying the repository, branch, and file path.
+///
+/// # Returns
+/// A `Result` containing a boxed readable stream (`Box<dyn Read>`) on success, or an `Error` on failure.
+///
+/// # References
+/// - [Git Protocol v2](https://git-scm.com/docs/protocol-v2)
+/// - [Git Web Interface](https://git-scm.com/docs/gitweb)
+/// - [GitHub Permanent Links](https://docs.github.com/en/repositories/working-with-files/using-files/getting-permanent-links-to-files)
 pub fn open<'a, 'b>(url: &'a Url<'b>) -> Result<Box<dyn Read>> {
-    // See: https://docs.rs/reqwest/latest/reqwest/blocking/struct.ClientBuilder.html
-    let client = ClientBuilder::new()
-        .user_agent(USER_AGENT)
-        .redirect(redirect::Policy::default())
-        .https_only(true);
-
+    // See: https://docs.rs/ureq/3.0.12/ureq/struct.Agent.html
+    let agent = request::new_agent(true, None);
     let url = map_git_url_to_raw_url(url.as_str())?;
 
-    // See: https://docs.rs/reqwest/latest/reqwest/blocking/struct.Client.html#method.get
-    // See: https://docs.rs/reqwest/latest/reqwest/blocking/struct.RequestBuilder.html
-    let response = client.build()?.get(url).send()?;
+    // See: https://docs.rs/ureq/3.0.12/ureq/struct.Agent.html#method.get
+    // See: https://docs.rs/ureq/3.0.12/ureq/struct.RequestBuilder.html#method.call
+    request::fetch(&agent, &url)
+}
 
-    Ok(Box::new(response))
+/// Downloads a file from a git repository using a raw content URL with custom request configuration.
+///
+/// Supports fetching files from:
+/// - GitHub: `git://github.com/owner/repo/branch/...path`
+/// - GitLab: `git://gitlab.com/owner/repo/branch/...path`
+///
+/// The function maps the provided git URL to a raw content URL and performs an HTTP GET request
+/// with the specified configuration (e.g., custom headers) to retrieve the file content as a readable stream.
+///
+/// # Arguments
+/// * `url` - The git URL specifying the repository, branch, and file path.
+/// * `config` - Custom request configuration, such as HTTP headers.
+///
+/// # Returns
+/// A `Result` containing a boxed readable stream (`Box<dyn Read>`) on success, or an `Error` on failure.
+///
+/// # References
+/// - [Git Protocol v2](https://git-scm.com/docs/protocol-v2)
+/// - [Git Web Interface](https://git-scm.com/docs/gitweb)
+/// - [GitHub Permanent Links](https://docs.github.com/en/repositories/working-with-files/using-files/getting-permanent-links-to-files)
+pub fn open_with_config<'a, 'b>(url: &'a Url<'b>, config: RequestConfig) -> Result<Box<dyn Read>> {
+    // See: https://docs.rs/ureq/3.0.12/ureq/struct.Agent.html
+    let agent = request::new_agent(true, None);
+    let url = map_git_url_to_raw_url(url.as_str())?;
+
+    // See: https://docs.rs/ureq/3.0.12/ureq/struct.Agent.html#method.get
+    // See: https://docs.rs/ureq/3.0.12/ureq/struct.RequestBuilder.html#method.call
+    request::fetch_with_config(&agent, &url, &config)
 }
 
 /// Maps a git URL to a raw content URL for supported git providers.
-/// - GitHub: git://github.com/owner/repo/branch/...path -> https://raw.githubusercontent.com/owner/repo/refs/heads/branch/...path
-/// - GitLab: git://gitlab.com/owner/repo/branch/...path -> https://gitlab.com/owner/repo/-/raw/branch/...path
+///
+/// Converts URLs like:
+/// - GitHub: `git://github.com/owner/repo/branch/...path` → `https://raw.githubusercontent.com/owner/repo/refs/heads/branch/...path`
+/// - GitLab: `git://gitlab.com/owner/repo/branch/...path` → `https://gitlab.com/owner/repo/-/raw/branch/...path`
+///
+/// # Arguments
+/// * `url_str` - The git URL to map.
+///
+/// # Returns
+/// A `Result` containing the raw content URL as a `String` on success, or an `Error` if the URL is invalid or the host is unsupported.
 fn map_git_url_to_raw_url(url_str: &str) -> Result<String> {
     let Some(path) = url_str.strip_prefix("git://") else {
         return Err(Error::InvalidGitUrl(format!(

@@ -1,25 +1,51 @@
 // This is free and unencumbered software released into the public domain.
 
-use crate::{Read, Result, Url};
-use reqwest::{blocking::ClientBuilder, redirect};
+use crate::{Read, RequestConfig, Result, Url};
+use crate::schemes::request;
 
-static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
-
-/// See: https://en.wikipedia.org/wiki/HTTP
-/// See: https://en.wikipedia.org/wiki/HTTPS
+/// Performs an HTTP or HTTPS GET request to fetch a file from a URL.
+///
+/// # Arguments
+/// * `url` - The URL to fetch (e.g., `http://example.com/file.txt` or `https://example.com/file.txt`).
+/// * `secure` - Whether to use HTTPS (TLS) for the request.
+///
+/// # Returns
+/// A `Result` containing a boxed readable stream (`Box<dyn Read>`) on success, or an `Error` on failure.
+///
+/// # References
+/// - [HTTP Protocol](https://en.wikipedia.org/wiki/HTTP)
+/// - [HTTPS Protocol](https://en.wikipedia.org/wiki/HTTPS)
 pub fn open<'a, 'b>(url: &'a Url<'b>, secure: bool) -> Result<Box<dyn Read>> {
-    // See: https://docs.rs/reqwest/latest/reqwest/blocking/struct.ClientBuilder.html
-    let mut client = ClientBuilder::new()
-        .user_agent(USER_AGENT)
-        .redirect(redirect::Policy::default());
+    // See: https://docs.rs/ureq/3.0.12/ureq/struct.Agent.html
+    let agent = request::new_agent(secure, None);
 
-    if secure {
-        client = client.https_only(true);
-    }
+    // See: https://docs.rs/ureq/3.0.12/ureq/struct.Agent.html#method.get
+    // See: https://docs.rs/ureq/3.0.12/ureq/struct.RequestBuilder.html#method.call
+    request::fetch(&agent, url.as_str())
+}
 
-    // See: https://docs.rs/reqwest/latest/reqwest/blocking/struct.Client.html#method.get
-    // See: https://docs.rs/reqwest/latest/reqwest/blocking/struct.RequestBuilder.html
-    let response = client.build()?.get(url.as_str()).send()?;
+/// Performs an HTTP or HTTPS GET request to fetch a file from a URL with custom request configuration.
+///
+/// # Arguments
+/// * `url` - The URL to fetch (e.g., `http://example.com/file.txt` or `https://example.com/file.txt`).
+/// * `secure` - Whether to use HTTPS (TLS) for the request.
+/// * `config` - Custom request configuration, such as HTTP headers.
+///
+/// # Returns
+/// A `Result` containing a boxed readable stream (`Box<dyn Read>`) on success, or an `Error` on failure.
+///
+/// # References
+/// - [HTTP Protocol](https://en.wikipedia.org/wiki/HTTP)
+/// - [HTTPS Protocol](https://en.wikipedia.org/wiki/HTTPS)
+pub fn open_with_config<'a, 'b>(
+    url: &'a Url<'b>,
+    secure: bool,
+    config: RequestConfig
+) -> Result<Box<dyn Read>> {
+    // See: https://docs.rs/ureq/3.0.12/ureq/struct.Agent.html
+    let agent = request::new_agent(secure, None);
 
-    Ok(Box::new(response))
+    // See: https://docs.rs/ureq/3.0.12/ureq/struct.Agent.html#method.get
+    // See: https://docs.rs/ureq/3.0.12/ureq/struct.RequestBuilder.html#method.call
+    request::fetch_with_config(&agent, url.as_str(), &config)
 }

@@ -111,7 +111,7 @@ pub enum Error {
             url(docsrs),
         )
     )]
-    FailedHttpRequest(#[from] reqwest::Error),
+    FailedHttpRequest(#[from] ureq::Error),
 
     #[cfg(feature = "git")]
     #[error("invalid Git URL: {0}")]
@@ -213,10 +213,10 @@ impl TryInto<suppaftp::FtpError> for Error {
 }
 
 #[cfg(any(feature = "http", feature = "https"))]
-impl TryInto<reqwest::Error> for Error {
+impl TryInto<ureq::Error> for Error {
     type Error = Error;
 
-    fn try_into(self) -> Result<reqwest::Error> {
+    fn try_into(self) -> Result<ureq::Error> {
         match self {
             Error::FailedHttpRequest(e) => Ok(e),
             _ => Err(self),

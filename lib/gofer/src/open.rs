@@ -1,6 +1,6 @@
 // This is free and unencumbered software released into the public domain.
 
-use crate::{Error, Read, Result, Url, UrlScheme};
+use crate::{Error, Read, RequestConfig, Result, Url, UrlScheme};
 
 pub fn open(url: impl AsRef<str>) -> Result<Box<dyn Read>> {
     let url = url.as_ref().parse::<Url>()?;
@@ -37,6 +37,26 @@ pub fn open(url: impl AsRef<str>) -> Result<Box<dyn Read>> {
 
         #[cfg(feature = "stdin")]
         UrlScheme::Stdin => crate::schemes::stdin::open(&url),
+
+        _ => Err(Error::UnknownScheme(url.scheme_str().to_string())),
+    }
+}
+
+pub fn open_with_config(url: impl AsRef<str>, config: RequestConfig) -> Result<Box<dyn Read>> {
+    let url = url.as_ref().parse::<Url>()?;
+
+    match url.scheme() {
+        #[cfg(feature = "git")]
+        UrlScheme::Git => crate::schemes::git::open_with_config(&url, config),
+
+        #[cfg(feature = "http")]
+        UrlScheme::Http => crate::schemes::http::open_with_config(&url, false, config),
+
+        #[cfg(feature = "https")]
+        UrlScheme::Https => crate::schemes::http::open_with_config(&url, true, config),
+
+        #[cfg(feature = "ipfs")]
+        UrlScheme::Ipfs => crate::schemes::ipfs::open_with_config(&url, config),
 
         _ => Err(Error::UnknownScheme(url.scheme_str().to_string())),
     }
